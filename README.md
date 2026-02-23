@@ -276,9 +276,9 @@ Access the live application:
 ```
 http://<EC2_PUBLIC_IP>
 ```
+🔗 **Website Live Demo:** [https://programmingprophet.github.io/linux-devops-handbook](https://programmingprophet.github.io/devops-showcase-app/)]
 
 <img width="1920" height="998" alt="image" src="https://github.com/user-attachments/assets/21890496-ae0f-4c80-bef8-b468faab2ccb" />
-
 
 ---
 
