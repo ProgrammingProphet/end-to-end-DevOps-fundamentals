@@ -190,9 +190,6 @@ During implementation, we solved:
 
 * Absolute path required in Ansible inventory
 
-### ✅ Case-Sensitive AWS Key Name
-
-* `Home-Key` ≠ `Home-key`
 
 ### ✅ Nginx Package Not Found
 
