@@ -1,0 +1,86 @@
+---
+- name: Configure EC2 with Nginx, Docker and Deploy App
+  hosts: web
+  become: yes
+
+  tasks:
+
+    - name: Update packages
+      yum:
+        name: "*"
+        state: latest
+
+    - name: Install Git
+      yum:
+        name: git
+        state: present
+
+    - name: Install Docker
+      yum:
+        name: docker
+        state: present
+
+    - name: Start Docker
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Add ec2-user to docker group
+      user:
+        name: ec2-user
+        groups: docker
+        append: yes
+
+    - name: Enable Nginx via amazon-linux-extras
+      command: amazon-linux-extras enable nginx1
+      args:
+        creates: /etc/yum.repos.d/amzn2extra-nginx1.repo
+
+    - name: Install Nginx
+      yum:
+        name: nginx
+        state: present
+
+    - name: Start Nginx
+      service:
+        name: nginx
+        state: started
+        enabled: yes
+
+    - name: Remove default nginx files
+      file:
+        path: /usr/share/nginx/html
+        state: absent
+
+    - name: Recreate nginx root directory
+      file:
+        path: /usr/share/nginx/html
+        state: directory
+        owner: nginx
+        group: nginx
+        mode: '0755'
+
+    - name: Clone Git Repository
+      git:
+        repo: "https://github.com/ProgrammingProphet/devops-showcase-app.git"
+        dest: /opt/devops-app
+        force: yes
+
+    - name: Copy application files to nginx root
+      copy:
+        src: /opt/devops-app/
+        dest: /usr/share/nginx/html/
+        remote_src: yes
+
+    - name: Set correct ownership for nginx
+      file:
+        path: /usr/share/nginx/html
+        owner: nginx
+        group: nginx
+        recurse: yes
+
+    - name: Restart Nginx
+      service:
+        name: nginx
+        state: restarted
